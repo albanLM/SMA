@@ -16,11 +16,7 @@
   </properties>
 
   <dependencies>
-    <dependency>
-      <groupId>com.tilab.jade</groupId>
-      <artifactId>jade</artifactId>
-      <version>4.5.0</version>
-    </dependency>
+    <!--  ...  -->
   </dependencies>
 
   <build>
@@ -35,12 +31,5 @@
       </plugin>
     </plugins>
   </build>
-
-  <repositories>
-    <repository>
-      <id>tilab</id>
-      <name>tilab repository</name>
-      <url>https://jade.tilab.com/maven/</url>
-    </repository>
-  </repositories>
+  
 </project>
