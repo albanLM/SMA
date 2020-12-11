@@ -7,8 +7,22 @@
   <artifactId>sma-project</artifactId>
   <packaging>jar</packaging>
   <version>1.0-SNAPSHOT</version>
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>RELEASE</version>
+            <scope>test</scope>
+        </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>RELEASE</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
 
-  <name>SMA Market Simulator</name>
+    <name>SMA Market Simulator</name>
   <url>https://github.com/albanLM/SMA</url>
 
   <properties>

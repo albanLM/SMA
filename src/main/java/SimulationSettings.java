@@ -1,15 +1,15 @@
-// Settings to be used for the simulation.
+/** Settings to be used for the simulation. */
 public class SimulationSettings {
-    // Number of agents to be created for the simulation.
+    /** Number of agents to be created for the simulation. */
     public final int agentCount;
-    // Names of the products to be created for the simulation.
+    /** Names of the products to be created for the simulation. */
     public final String[] productNames;
-    // How much money the agent will have at the start of the simulation
+    /** How much money the agent will have at the start of the simulation */
     public final float startMoney;
-    // How much time the simulation will run.
-    public final float simulationDuration;
+    /** How much time the simulation will run in seconds. */
+    public final long simulationDuration;
 
-    public SimulationSettings(int agentCount, String[] productNames, float simulationDuration, float startMoney) {
+    public SimulationSettings(int agentCount, String[] productNames, long simulationDuration, float startMoney) {
         this.agentCount = agentCount;
         this.productNames = productNames;
         this.startMoney = startMoney;
