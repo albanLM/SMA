@@ -6,6 +6,5 @@ public class Main {
         float startMoney = 10.0f;
         SimulationSettings settings = new SimulationSettings(agentCount, productNames, simulationDuration, startMoney);
 
-        Simulation simulation = new Simulation(settings);
     }
 }

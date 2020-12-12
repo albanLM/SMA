@@ -17,19 +17,19 @@ import jade.domain.FIPAException;
 */
 public class ProducerConsumerAgent extends Agent {
     /**Identifier of the agent.*/
-    private final int id;
+    private int id;
     /** Speed at which the agent produces goods in units/sec. */
-    private final float productionRate;
+    private float productionRate;
     /** Speed at which the agent consumes goods in units/sec. */
-    private final float consumptionRate;
+    private float consumptionRate;
     /** Speed of decay of the agent while in starvation. */
-    private final float decayRate;
+    private float decayRate;
     /** Type of product produced by this agent. */
-    private final String product;
+    private String product;
     /** Type of supply consumed by this agent. */
-    private final String supply;
+    private String supply;
     /** Maximum amount of products this agent can have */
-    private final long productMaxQuantity;
+    private long productMaxQuantity;
     /** Money the agent has. Every agent starts with N amount of money. */
     private float money;
     /** Satisfaction of the agent: 0 to 1, higher is better. */
@@ -37,31 +37,38 @@ public class ProducerConsumerAgent extends Agent {
     /** Sale's price of the product: starts at 1. */
     private float salePrice;
     /** Quantity of supply this agent has. */
-    private float supplyQuantity;
+    private int supplyQuantity;
     /** Quantity of products this agent has. */
-    private float productQuantity;
+    private int productQuantity;
 
     /** Parallel behaviour, used to add multiple behaviour that will run in parallel. */
     private ParallelBehaviour parallelBehaviour;
     /** Number of ticks the agent passed without supplies. */
     private int starvationCounter;
 
-    public ProducerConsumerAgent(int id, float productionRate, float consumptionRate, float decayRate, String producedProduct, String consumedProduct, long productMaxQuantity, int money) {
-        this.id = id;
-        this.productionRate = productionRate;
-        this.consumptionRate = consumptionRate;
-        this.decayRate = decayRate;
-        this.product = producedProduct;
-        this.supply = consumedProduct;
-        this.productMaxQuantity = productMaxQuantity;
-        this.money = money;
-        salePrice = 1.0f;
-        satisfaction = 1.0f;
-        starvationCounter = 0;
-    }
-
     @Override
     protected void setup() {
+        // Get the agent arguments
+        Object[] args = getArguments();
+        if (args != null && args.length != 0) {
+            try {
+                id = (int) args[0];
+                productionRate = (float) args[1];
+                consumptionRate = (float) args[2];
+                decayRate = (float) args[3];
+                product = (String) args[4];
+                supply = (String) args[5];
+                productMaxQuantity = (long) args[6];
+                money = (float) args[7];
+                supplyQuantity = (int) args[8];
+                satisfaction = 1.0f;
+                salePrice = 1.0f;
+                productQuantity = 0;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
         System.out.println("Hello World! My name is " + getLocalName());
 
         register(product + "-seller", "seller-" + this.getLocalName());
@@ -162,16 +169,32 @@ public class ProducerConsumerAgent extends Agent {
     }
 
     /**
-     * Subtract [amount] of money from the agent if he has enough.
-     * @param amount Amount of money the agent has to pay
-     * @return A boolean that tells if the agent had enough to pay
+     * Buy [quantity] of supplies in exchange for [price] money.
+     * @param quantity Quantity of supplies to buy.
+     * @param price Total price for the purchase.
+     * @return Purchase success.
      */
-    public boolean pay(float amount) {
-        boolean hasEnough;
-        if(hasEnough = ((money - amount) >= 0)) {
-            money -= amount;
+    public boolean buy(int quantity, float price) {
+        boolean success;
+        if(success = ((money - price) >= 0)) {
+            money -= price;
+            supplyQuantity += quantity;
         }
-        return hasEnough;
+        return success;
+    }
+
+    /**
+     * Sell [quantity] of products in exchange for [salePrice] money.
+     * @param quantity Quantity of products to sell.
+     * @return Sale success.
+     */
+    public boolean sell(int quantity) {
+        boolean success;
+        if (success = (supplyQuantity >= quantity)) {
+            supplyQuantity -= quantity;
+            money += salePrice;
+        }
+        return success;
     }
 
     /**

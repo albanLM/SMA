@@ -1,21 +1,40 @@
+import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.WakerBehaviour;
+import jade.wrapper.AgentContainer;
+import jade.wrapper.StaleProxyException;
 
-// Simulation in which the agents will interact with each other.
-// Statistics on its progress are displayed at the end.
+import java.util.ArrayList;
+
+/**
+ * Simulation in which the agents will interact with each other.
+ * Statistics on its progress are displayed at the end.
+*/
 public class Simulation extends Agent {
-    // Agents that will take part in the simulation.
-    private final Agent[] agents;
-    // Products that will be exchanged, produced and consumed during the simulation.
-    private final String[] products;
-    // TODO: Add a timer to know if the simulation is done or not
+    /** Products that will be exchanged, produced and consumed during the simulation. */
+    private String[] products;
+    /** Agents that will take part in the simulation. */
+    private Agent[] agents;
 
-    private final SimulationSettings settings;
+    private SimulationSettings settings;
 
     @Override
     protected void setup() {
         super.setup();
 
+        // Get arguments
+        // Get the agent arguments
+        Object[] args = getArguments();
+        if (args != null && args.length != 0) {
+            try {
+               settings = (SimulationSettings) args[0];
+               products = settings.productNames;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Add a behaviour to be called at the end of the simulation
         addBehaviour(new WakerBehaviour(this, settings.simulationDuration * 1000 /* milliseconds to seconds conversion */) {
             @Override
             protected void onWake() {
@@ -23,22 +42,30 @@ public class Simulation extends Agent {
                 endSimulation();
             }
         });
+
+        startSimulation();
+    }
+
+    public void startSimulation() {
+        AgentContainer agentContainer = getContainerController();
+
+        for (int i = 0; i < settings.agentCount; i++) {
+            // Agent arguments : id, productionRate, consumptionRate, decayRate, product, supply, productMaxQuantity, money, supplyQuantity
+            // TODO: Automate the arguments creation
+            Object[] args = {i, 2.0f, 0.5f, 0.1f, "banana", "banana", 50, 5.0f, 10};
+            try {
+                agentContainer.createNewAgent("PCA_" + i, "main.java.agents.ProducerConsumerAgent", args).start();
+            } catch (StaleProxyException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Created agent PCA_" + i);
+        }
     }
 
     private void endSimulation() {
-        // TODO: Destroy all the agents
         // TODO: Display the results
+        // TODO: Destroy all the agents
         // TODO: Destroy self
-    }
-
-    public Simulation(SimulationSettings settings) {
-        this.settings = settings;
-        this.agents = null; // TODO: Create the agents
-        this.products = settings.productNames;
-    }
-
-    public void simulate() {
-        // Add the agents to the container
     }
 
     // Indicate if the simulation has finished to run
