@@ -52,15 +52,15 @@ public class ProducerConsumerAgent extends Agent {
         Object[] args = getArguments();
         if (args != null && args.length != 0) {
             try {
-                id = (int) args[0];
-                productionRate = (float) args[1];
-                consumptionRate = (float) args[2];
-                decayRate = (float) args[3];
+                id = Integer.parseInt((String) args[0]);
+                productionRate = Float.parseFloat((String)args[1]);
+                consumptionRate = Float.parseFloat((String)args[2]);
+                decayRate = Float.parseFloat((String)args[3]);
                 product = (String) args[4];
                 supply = (String) args[5];
-                productMaxQuantity = (long) args[6];
-                money = (float) args[7];
-                supplyQuantity = (int) args[8];
+                productMaxQuantity = Long.parseLong((String) args[6]);
+                money = Float.parseFloat((String)args[7]);
+                supplyQuantity = Integer.parseInt((String) args[8]);
                 satisfaction = 1.0f;
                 salePrice = 1.0f;
                 productQuantity = 0;
@@ -78,8 +78,8 @@ public class ProducerConsumerAgent extends Agent {
 
         // Ticker Behaviours - defined by productionRate and consumptionRate
         // Below formulas : (1 / (u/s)) * 1000   ->  s/u * 1000  ->  ms/u
-        long productionDelta = (long) (1 / this.productionRate) * 1000;
-        long consumptionDelta = (long) (1 / this.consumptionRate) * 1000;
+        long productionDelta = (long) (( 1 / this.productionRate) * 1000);
+        long consumptionDelta = (long) (( 1 / this.consumptionRate) * 1000);
         parallelBehaviour.addSubBehaviour(new ProducerBehaviour(this, productionDelta));
         parallelBehaviour.addSubBehaviour(new ConsumerBehaviour(this, consumptionDelta));
 
@@ -177,7 +177,7 @@ public class ProducerConsumerAgent extends Agent {
     public boolean buy(int quantity, float price) {
         boolean success;
         if(success = ((money - price) >= 0)) {
-            money -= price;
+            money -= price*quantity;
             supplyQuantity += quantity;
         }
         return success;
@@ -192,7 +192,7 @@ public class ProducerConsumerAgent extends Agent {
         boolean success;
         if (success = (supplyQuantity >= quantity)) {
             supplyQuantity -= quantity;
-            money += salePrice;
+            money += salePrice*quantity;
         }
         return success;
     }

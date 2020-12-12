@@ -68,12 +68,8 @@ public class Simulation extends Agent {
         // TODO: Destroy self
     }
 
-    // Indicate if the simulation has finished to run
-    public boolean isFinished() {
-        return false;
-    }
-
     public String simulationResults() {
+        // TODO: Print stats
         return "";
     }
 }
