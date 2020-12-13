@@ -23,19 +23,34 @@ import java.util.Random;
 import static jade.lang.acl.MessageTemplate.MatchPerformative;
 
 /**
- * Simulation in which the agents will interact with each other.
- * Statistics on its progress are displayed at the end.
+ * Simulation in which the agents will interact with each other. This class manages agent creation and destruction, depending on the parameters given to it upon creation.
+ * Statistics on its progress are displayed at the end. It is itself an agent.
 */
 public class Simulation extends Agent {
-    /** Products that will be exchanged, produced and consumed during the simulation. */
+    /**
+     * Products that will be exchanged, produced and consumed during the simulation.
+     */
     private String[] products;
-    /** Agents that will take part in the simulation. */
+
+    /**
+     * Agents that will take part in the simulation.
+     */
     private Agent[] agents;
 
+    /**
+     * An array of records of the satisfaction of agents at relevant points in the simulation.
+     */
     private ArrayList<Float> satisfactionRecords;
 
+    /**
+     * The settings of the simulation passed upon agent creation.
+     */
     private SimulationSettings settings;
 
+    /**
+     * Override of the setup method in Agent. It ensures setting reception, the registering of the of a behaviour to schedule the end of the simulation,
+     * as well as another behaviour to receive statistics.
+     */
     @Override
     protected void setup() {
         super.setup();
@@ -85,6 +100,10 @@ public class Simulation extends Agent {
         addBehaviour(parallel);
     }
 
+    /**
+     * Encapsulates the steps needed to create the simulation. More specifically, it creates ProducerConsumerAgent instances in its container,
+     * and give random ranged parameters for its properties, as long as a pair of products from the settings of the simulation.
+     */
     public void startSimulation() {
         AgentContainer agentContainer = getContainerController();
 
@@ -108,6 +127,10 @@ public class Simulation extends Agent {
         }
     }
 
+    /**
+     * Encapsulates all the states of the end of the simulation. It first searches for agents belonging to the simulation (prefix: PCA_),
+     * and then send a shutdown message to them. It proceeds to print the simulation results and destroys itself.
+     */
     private void endSimulation(){
         //Shutting subordinate agents
         AMSAgentDescription[] subordinates;
@@ -140,10 +163,17 @@ public class Simulation extends Agent {
         takeDown();
     }
 
+    /**
+     * Method used to delete the instance of the simulation
+     */
     protected void takeDown(){
         doDelete();
     }
 
+    /**
+     * Computes the statistics to print
+     * @return A String describing the results of the simulation.
+     */
     public String simulationResults() {
         float sum = 0.0f;
 
