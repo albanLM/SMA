@@ -25,34 +25,46 @@ import static jade.lang.acl.MessageTemplate.MatchPerformative;
 public class ProducerConsumerAgent extends Agent {
     /**Identifier of the agent.*/
     private int id;
+
     /** Speed at which the agent produces goods in units/sec. */
     private float productionRate;
+
     /** Speed at which the agent consumes goods in units/sec. */
     private float consumptionRate;
+
     /** Speed of decay of the agent while in starvation. */
     private float decayRate;
+
     /** Type of product produced by this agent. */
     private String product;
-    /** Type of supply consumed by this agent. */
+
+    /** Type of consumed consumed by this agent. */
     private String supply;
-    /** Maximum amount of products this agent can have */
+
+    /** Maximum amount of producted good this agent can have */
     private long productMaxQuantity;
-    /** Money the agent has. Every agent starts with N amount of money. */
+
+    /** Money the agent possesses */
     private float money;
+
     /** Satisfaction of the agent: 0 to 1, higher is better. */
     private float satisfaction;
-    /** Sale's price of the product: starts at 1. */
+
+    /** Sales price of the product: starts at 1. Increases with satisfaction, decreases with money possessed. */
     private float salePrice;
-    /** Quantity of supply this agent has. */
+
+    /** Quantity of consumed goods this agent has. */
     private int supplyQuantity;
-    /** Quantity of products this agent has. */
+
+    /** Quantity of produced goods this agent has. */
     private int productQuantity;
 
-    /** AID of the parent simulation*/
+    /** AID of the parent simulation */
     private AID simAID;
 
     /** Parallel behaviour, used to add multiple behaviour that will run in parallel. */
     private ParallelBehaviour parallelBehaviour;
+
     /** Number of ticks the agent passed without supplies. */
     private int starvationCounter;
 
@@ -100,14 +112,14 @@ public class ProducerConsumerAgent extends Agent {
     }
 
     /**
-     * Contain agent clean-up operations
+     * Computes clean-up operations
      */
     public void takeDown() {
         unregister();
     }
 
     /**
-     * Register the goods-selling service in the yellow pages
+     * Registers the goods-selling service in the yellow pages
      */
     private void register(String type, String name) {
         DFAgentDescription dfd = new DFAgentDescription();
@@ -125,7 +137,7 @@ public class ProducerConsumerAgent extends Agent {
     }
 
     /**
-     * Unregister from the yellow pages
+     * Unregisters from the yellow pages
      */
     private void unregister() {
         try{
@@ -136,7 +148,7 @@ public class ProducerConsumerAgent extends Agent {
     }
 
     /**
-     * Consume one unit of supply. If no supplies left, loose satisfaction.
+     * Consumes one unit of supply. If no supplies left, decreases satisfaction instead.
      */
     public void consume() {
         if (supplyQuantity > 0) {
@@ -149,7 +161,7 @@ public class ProducerConsumerAgent extends Agent {
     }
 
     /**
-     * Restore the satisfaction of the agent to 100%.
+     * Restores the satisfaction of the agent to 1.
      */
     private void restoreSatisfaction() {
         satisfaction = 1;
@@ -157,8 +169,8 @@ public class ProducerConsumerAgent extends Agent {
     }
 
     /**
-     * Decrease the satisfaction of the agent and delete it when 0% is reached.
-     * The decay is exponential and will rise each tick.
+     * Decreases the satisfaction of the agent and delete it when 0% is reached.
+     * The decay is exponential and will rise more with each tick.
      */
     private void looseSatisfaction() {
         // Decrease the satisfaction of the agent
@@ -171,7 +183,7 @@ public class ProducerConsumerAgent extends Agent {
     }
 
     /**
-     * Produce one unit of product.
+     * Produces one unit of product.
      * The product quantity can't exceed the threshold specified at the creation of the agent.
      */
     public void produce() {
@@ -179,10 +191,10 @@ public class ProducerConsumerAgent extends Agent {
     }
 
     /**
-     * Buy [quantity] of supplies in exchange for [price] money.
+     * Buys [quantity] of supplies in exchange for [price] money.
      * @param quantity Quantity of supplies to buy.
      * @param price Total price for the purchase.
-     * @return Purchase success.
+     * @return True if the buyer has enough money, False otherwise
      */
     public boolean buy(int quantity, float price) {
         boolean success;
@@ -194,9 +206,9 @@ public class ProducerConsumerAgent extends Agent {
     }
 
     /**
-     * Sell [quantity] of products in exchange for [salePrice] money.
+     * Sells [quantity] of products in exchange for [salePrice] money.
      * @param quantity Quantity of products to sell.
-     * @return Sale success.
+     * @return True if the seller has enough stock to complete the sale, False otherwise
      */
     public boolean sell(int quantity) {
         boolean success;
@@ -207,64 +219,97 @@ public class ProducerConsumerAgent extends Agent {
         return success;
     }
 
-    /**
-     * An agent is unsatisfied if his satisfaction is below 50%
-     */
-    public boolean isSatisfied() {
-        return satisfaction >= 0.5f;
-    }
-
     /////////////////////////////////////////////////
     //////////////////// GETTERS ////////////////////
     /////////////////////////////////////////////////
+
+    /**
+     * @return The identifier of the Agent
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * @return The production of the Agent
+     */
     public float getProductionRate() {
         return productionRate;
     }
 
+    /**
+     * @return The consumption rate of the Agent
+     */
     public float getConsumptionRate() {
         return consumptionRate;
     }
 
+    /**
+     * @return The name of the good produced by the Agent
+     */
     public String getProduct() {
         return product;
     }
 
+    /**
+     * @return The name of the good consumed by the agent
+     */
     public String getSupply() {
         return supply;
     }
 
+    /**
+     * @return The maximum quantity of produced good that can be stored
+     */
     public long getProductMaxQuantity() {
         return productMaxQuantity;
     }
 
+    /**
+     * @return The amount of money the Agent possesses
+     */
     public float getMoney() {
         return money;
     }
 
+    /**
+     * @return The satisfaction of the Agent
+     */
     public float getSatisfaction() {
         return satisfaction;
     }
 
+    /**
+     * @return The unit price proposed by the Agent at the moment
+     */
     public float getSalePrice() {
         return salePrice;
     }
 
+    /**
+     * @return The quantity of consumed good possessed
+     */
     public int getSupplyQuantity() {
         return supplyQuantity;
     }
 
+    /**
+     * @return The production rate of the Agent in units/sec
+     */
     public int getProductQuantity() {
         return productQuantity;
     }
 
+    /**
+     * @return The behaviour that encapsulates the other ones in a parallel fashion
+     */
     public ParallelBehaviour getParallelBehaviour() {
         return parallelBehaviour;
     }
 
+    /**
+     * @return The AID of the simulation Agent that created the Agent instance
+     */
     public AID getSimAID() {
         return simAID;
     }
