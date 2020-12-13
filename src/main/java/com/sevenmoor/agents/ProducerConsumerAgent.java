@@ -68,6 +68,10 @@ public class ProducerConsumerAgent extends Agent {
     /** Number of ticks the agent passed without supplies. */
     private int starvationCounter;
 
+    /**
+     * Override of the equivalent method in Agent.It parses the arguments of its creation,
+     * it registers the Agent in a seller service, and it adds all of the necessary behaviours.
+     */
     @Override
     protected void setup() {
         // Get the agent arguments
