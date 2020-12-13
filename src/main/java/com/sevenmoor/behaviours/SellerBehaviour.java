@@ -4,7 +4,6 @@ import com.sevenmoor.agents.ProducerConsumerAgent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import javafx.animation.KeyFrame;
 
 import java.util.Date;
 

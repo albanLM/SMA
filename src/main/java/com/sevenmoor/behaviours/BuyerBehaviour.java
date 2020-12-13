@@ -15,16 +15,55 @@ import java.util.Date;
 
 import static jade.lang.acl.MessageTemplate.MatchPerformative;
 
+/**
+ * Behaviour that encapsulates the buyer aspect of the Agent
+ */
 public class BuyerBehaviour extends Behaviour {
+
+    /**
+     * The Agent possessing the behaviour
+     */
     final ProducerConsumerAgent agent;
+
+    /**
+     * The sellers available for the sale of the product
+     */
     private ArrayList<AID> sellerAgents;
+
+    /**
+     * The state used to specialize the behaviour (0: calling for proposal, 1: waiting for proposals, 2: listening to confirmation, 3: exiting)
+     */
     private int state;
+
+    /**
+     * The number of replies the agent has got from the sellers
+     */
     private int repliesCount;
+
+    /**
+     * The AID of the best dealer
+     */
     private AID bestSeller;
+
+    /**
+     * The price given proposed by the best dealer
+     */
     private float bestPrice;
+
+    /**
+     * The quantity of consumed good purchased
+     */
     private int boughtQuantity;
+
+    /**
+     * The start date of the action to account for timeouts
+     */
     private Date start;
 
+    /**
+     * Creates a new BuyerBehaviour instance
+     * @param agent the Agent to which this Behaviour applies
+     */
     public BuyerBehaviour(ProducerConsumerAgent agent) {
         super(agent);
         this.agent = agent;
@@ -32,6 +71,9 @@ public class BuyerBehaviour extends Behaviour {
         repliesCount = 0;
     }
 
+    /**
+     * Decides which behaviour to take depending on the state
+     */
     @Override
     public void action(){
         start = new Date();
@@ -51,7 +93,7 @@ public class BuyerBehaviour extends Behaviour {
     }
 
     /**
-     * Send a CALL_FOR_PROPOSAL to all agent's supply sellers
+     * Sends a CALL_FOR_PROPOSAL to all agent's supply sellers
      */
     private void callForProposal() {
         // Update the list of seller agents
@@ -86,7 +128,7 @@ public class BuyerBehaviour extends Behaviour {
     }
 
     /**
-     * Listen for PROPOSAL messages and select the best offer
+     * Listens for PROPOSAL messages, select the best offer, and rejects the other ones
      */
     private void listenForProposals() {
         // Prepare the template to get proposals
@@ -150,7 +192,7 @@ public class BuyerBehaviour extends Behaviour {
     }
 
     /**
-     * Listen for CONFIRM message and apply transaction
+     * Listens for CONFIRM message and applies transaction
      */
     private void listenForConfirmation() {
         // Prepare the template to get proposals
