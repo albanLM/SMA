@@ -28,16 +28,6 @@ import static jade.lang.acl.MessageTemplate.MatchPerformative;
 */
 public class Simulation extends Agent {
     /**
-     * Products that will be exchanged, produced and consumed during the simulation.
-     */
-    private String[] products;
-
-    /**
-     * Agents that will take part in the simulation.
-     */
-    private Agent[] agents;
-
-    /**
      * An array of records of the satisfaction of agents at relevant points in the simulation.
      */
     private ArrayList<Float> satisfactionRecords;
@@ -60,7 +50,6 @@ public class Simulation extends Agent {
         if (args != null && args.length>3){
             try {
                settings = new SimulationSettings(args);
-               products = settings.productNames;
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -136,7 +125,7 @@ public class Simulation extends Agent {
 
         try {
             SearchConstraints c = new SearchConstraints();
-            c.setMaxResults (new Long(-1));
+            c.setMaxResults ((long) -1);
             subordinates = AMSService.search( this, new AMSAgentDescription(), c );
 
             ACLMessage shutdown = new ACLMessage(ACLMessage.REQUEST);
