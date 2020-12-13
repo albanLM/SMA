@@ -159,8 +159,9 @@ public class BuyerBehaviour extends Behaviour {
         ACLMessage reply = myAgent.receive(mt);
         if (reply != null) {
             // Apply the transaction
-            System.out.println("["+myAgent.getName()+"] Confirming purchase on client side");
-            agent.buy(boughtQuantity, bestPrice); // TODO: Verify purchase success
+            if(agent.buy(boughtQuantity, bestPrice)){
+                System.out.println("["+myAgent.getName()+"] Confirming purchase on client side");
+            }
 
             // Go to state 3 and quit the purchase
             state = 3;

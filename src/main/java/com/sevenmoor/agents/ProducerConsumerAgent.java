@@ -3,12 +3,19 @@ package com.sevenmoor.agents;
 import com.sevenmoor.behaviours.ConsumerBehaviour;
 import com.sevenmoor.behaviours.ProducerBehaviour;
 import com.sevenmoor.behaviours.SellerBehaviour;
+import com.sevenmoor.behaviours.TakeDownBehaviour;
+import jade.core.AID;
 import jade.core.Agent;
+import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.ParallelBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
+import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
+
+import static jade.lang.acl.MessageTemplate.MatchPerformative;
 
 /**
 * Producer and consumer agent.
@@ -41,6 +48,9 @@ public class ProducerConsumerAgent extends Agent {
     /** Quantity of products this agent has. */
     private int productQuantity;
 
+    /** AID of the parent simulation*/
+    private AID simAID;
+
     /** Parallel behaviour, used to add multiple behaviour that will run in parallel. */
     private ParallelBehaviour parallelBehaviour;
     /** Number of ticks the agent passed without supplies. */
@@ -61,6 +71,7 @@ public class ProducerConsumerAgent extends Agent {
                 productMaxQuantity = (args[6].getClass().getSimpleName().equals("Long")) ? (long) args[6] : Long.parseLong((String) args[6]);
                 money = (args[7].getClass().getSimpleName().equals("Float")) ? (float) args[7] : Float.parseFloat((String)args[7]);
                 supplyQuantity = (args[8].getClass().getSimpleName().equals("Integer")) ? (int) args[8] : Integer.parseInt((String) args[8]);
+                simAID = (AID) args[9];
                 satisfaction = 1.0f;
                 salePrice = 1.0f;
                 productQuantity = 0;
@@ -85,12 +96,13 @@ public class ProducerConsumerAgent extends Agent {
 
         // CyclicBehaviour
         parallelBehaviour.addSubBehaviour(new SellerBehaviour(this));
+        parallelBehaviour.addSubBehaviour(new TakeDownBehaviour(this));
     }
 
     /**
      * Contain agent clean-up operations
      */
-    protected void takeDown() {
+    public void takeDown() {
         unregister();
     }
 
@@ -116,14 +128,11 @@ public class ProducerConsumerAgent extends Agent {
      * Unregister from the yellow pages
      */
     private void unregister() {
-        try {
+        try{
             DFService.deregister(this);
         }
-        catch (FIPAException fe) {
-            fe.printStackTrace();
-        }
-        // Printout a dismissal message
-        System.out.println("Seller-agent "+getAID().getName()+" terminating.");
+        catch (FIPAException fe) {} //Normal if not registered, do nothing
+        //System.out.println("Seller-agent "+getAID().getName()+" terminating.");
     }
 
     /**
@@ -136,7 +145,7 @@ public class ProducerConsumerAgent extends Agent {
         } else {
             looseSatisfaction();
         }
-        salePrice = (isSatisfied()) ? supplyQuantity/money : (0.5f + satisfaction*0.5f)/money;
+        salePrice = (supplyQuantity>0) ? supplyQuantity/money : (0.5f + satisfaction*0.5f)/money;
     }
 
     /**
@@ -177,7 +186,7 @@ public class ProducerConsumerAgent extends Agent {
      */
     public boolean buy(int quantity, float price) {
         boolean success;
-        if(success = ((money - price) >= 0)) {
+        if(success = ((money - price*quantity) >= 0)) {
             money -= price*quantity;
             supplyQuantity += quantity;
         }
@@ -254,6 +263,10 @@ public class ProducerConsumerAgent extends Agent {
 
     public ParallelBehaviour getParallelBehaviour() {
         return parallelBehaviour;
+    }
+
+    public AID getSimAID() {
+        return simAID;
     }
 }
 

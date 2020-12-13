@@ -94,11 +94,13 @@ public class SellerBehaviour extends CyclicBehaviour {
 
                 ACLMessage reply = msg.createReply();
                 reply.setPerformative(ACLMessage.CONFIRM);
-                System.out.println("["+myAgent.getName()+"] Confirming sale for quantity="+quantity);
+
                 agent.send(reply);
 
                 // Complete the sale
-                agent.sell(quantity); // TODO: Verify sale success
+                if(agent.sell(quantity)){
+                    System.out.println("["+myAgent.getName()+"] Confirming sale for quantity="+quantity);
+                }
 
                 state = 0;
             } else {

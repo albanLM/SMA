@@ -2,6 +2,7 @@ package com.sevenmoor.behaviours;
 
 import com.sevenmoor.agents.ProducerConsumerAgent;
 import jade.core.behaviours.TickerBehaviour;
+import jade.lang.acl.ACLMessage;
 
 public class ConsumerBehaviour extends TickerBehaviour {
     private final ProducerConsumerAgent agent;
@@ -18,6 +19,12 @@ public class ConsumerBehaviour extends TickerBehaviour {
         // Agent must consume goods
         agent.consume();
         System.out.println("["+myAgent.getName()+"] Consuming 1 "+agent.getSupply()+", "+agent.getSupplyQuantity()+" remaining");
+
+        //Sending stats to simulation
+        ACLMessage statistics = new ACLMessage(ACLMessage.INFORM);
+        statistics.addReceiver(agent.getSimAID());
+        statistics.setContent(""+agent.getSatisfaction());
+        myAgent.send(statistics);
 
         // Is there any supply left ?
         if (!(agent.getSupplyQuantity() > 0)) {
