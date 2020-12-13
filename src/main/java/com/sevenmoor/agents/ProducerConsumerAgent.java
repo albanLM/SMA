@@ -136,6 +136,7 @@ public class ProducerConsumerAgent extends Agent {
         } else {
             looseSatisfaction();
         }
+        salePrice = (isSatisfied()) ? supplyQuantity/money : (0.5f + satisfaction*0.5f)/money;
     }
 
     /**

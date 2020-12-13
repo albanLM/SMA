@@ -56,7 +56,7 @@ public class Simulation extends Agent {
             Random rand = new Random();
             float productionRate = Math.abs(rand.nextFloat()) * (3.0f - 0.5f) + 0.5f;
             float consumptionRate = Math.abs(rand.nextFloat()) * (2f - 0.1f) + 0.1f;
-            float decayRate = Math.abs(rand.nextFloat()) * (0.5f - 0.1f) + 0.1f;
+            float decayRate = Math.abs(rand.nextFloat()) * (0.001f - 0.0001f) + 0.1f;
             long productMaxQuantity = 10 + Math.abs(rand.nextLong()) % (100 - 10 + 1);
             int supplyQuantity = 10 + Math.abs(rand.nextInt()) % (30 - 10 + 1);
             String produces = settings.productNames[rand.nextInt(settings.productNames.length)];

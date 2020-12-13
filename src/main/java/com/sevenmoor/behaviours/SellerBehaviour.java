@@ -4,12 +4,16 @@ import com.sevenmoor.agents.ProducerConsumerAgent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import javafx.animation.KeyFrame;
+
+import java.util.Date;
 
 import static jade.lang.acl.MessageTemplate.MatchPerformative;
 
 public class SellerBehaviour extends CyclicBehaviour {
     private final ProducerConsumerAgent agent;
     private int state;
+    private Date start;
 
     public SellerBehaviour(ProducerConsumerAgent agent) {
         super(agent);
@@ -19,7 +23,7 @@ public class SellerBehaviour extends CyclicBehaviour {
 
     @Override
     public void action() {
-        // TODO: Update price based on satisfaction
+        start = new Date();
         switch (state) {
             case 0:
                 listenForProposal();
@@ -95,6 +99,8 @@ public class SellerBehaviour extends CyclicBehaviour {
 
                 // Complete the sale
                 agent.sell(quantity); // TODO: Verify sale success
+
+                state = 0;
             } else {
                 // No:
                 // Back to proposal listening state
@@ -104,7 +110,7 @@ public class SellerBehaviour extends CyclicBehaviour {
         else {
             // No:
             // Wait for another message
-            block(); // TODO: Add timeout
+            block();
         }
     }
 }

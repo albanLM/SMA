@@ -11,6 +11,7 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import static jade.lang.acl.MessageTemplate.MatchPerformative;
 
@@ -22,6 +23,7 @@ public class BuyerBehaviour extends Behaviour {
     private AID bestSeller;
     private float bestPrice;
     private int boughtQuantity;
+    private Date start;
 
     public BuyerBehaviour(ProducerConsumerAgent agent) {
         super(agent);
@@ -32,7 +34,7 @@ public class BuyerBehaviour extends Behaviour {
 
     @Override
     public void action(){
-        System.out.println("["+myAgent.getName()+"] Starting buyer behaviour");
+        start = new Date();
         switch (state) {
             case 0:
                 callForProposal();
@@ -64,6 +66,7 @@ public class BuyerBehaviour extends Behaviour {
             System.out.println("Found the following seller agents:");
             for (int i = 0; i < result.length; ++i) {
                 sellerAgents.add(result[i].getName());
+                System.out.println(result[i].getName());
             }
         }
         catch (FIPAException fe) {
@@ -105,7 +108,7 @@ public class BuyerBehaviour extends Behaviour {
             }
             repliesCount++;
             // Have all replies been received ?
-            if (repliesCount >= sellerAgents.size()) {
+            if (repliesCount >= sellerAgents.size()||new Date().getTime()-start.getTime()>1000) {
                 // Yes:
                 // Has the agent enough money to make an offer ?
                 if (agent.getMoney() >= bestPrice) {
@@ -139,7 +142,10 @@ public class BuyerBehaviour extends Behaviour {
             }
         }
         else {
-            block(); // TODO: Add timeout
+            if(new Date().getTime()-start.getTime()>1000){
+                myAgent.removeBehaviour(this);
+            }
+            block();
         }
     }
 
@@ -159,7 +165,10 @@ public class BuyerBehaviour extends Behaviour {
             // Go to state 3 and quit the purchase
             state = 3;
         } else {
-            block(); // TODO: Add timeout
+            if(new Date().getTime()-start.getTime()>10000){
+                myAgent.removeBehaviour(this);
+            }
+            block();
         }
     }
 
