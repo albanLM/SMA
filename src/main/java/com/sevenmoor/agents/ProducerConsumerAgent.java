@@ -124,6 +124,8 @@ public class ProducerConsumerAgent extends Agent {
 
     /**
      * Registers the goods-selling service in the yellow pages
+     * @param type productName+"-seller"
+     * @param name name of the Agent
      */
     private void register(String type, String name) {
         DFAgentDescription dfd = new DFAgentDescription();

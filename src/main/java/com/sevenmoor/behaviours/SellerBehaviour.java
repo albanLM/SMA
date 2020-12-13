@@ -15,8 +15,8 @@ public class SellerBehaviour extends CyclicBehaviour {
     private final ProducerConsumerAgent agent;
 
     /** Current state of the transaction. From 0 to 1, with :
-     * 0 -> Idle, listening for calls of proposal
-     * 1 -> A proposal has been sent and the agent listens for answer
+     * 0: Idle, listening for calls of proposal
+     * 1: A proposal has been sent and the agent listens for answer
      */
     private int state;
 
