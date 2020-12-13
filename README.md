@@ -16,3 +16,5 @@ On pourra bien sûr faire varier les paramètres selon les règles suivantes:
 - Tous les arguments suivants sont les noms des produits que s'échangeront les agents
 
 Alternativement, on pourra créer l'agent simulation avec ces paramètres dans la gui, si on souhaite lancer le sniffer par exemple.
+
+![Comment créer une simulation](Create_simulation.gif "Lancer la simulation")
