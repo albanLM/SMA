@@ -1,6 +1,6 @@
-package behaviours;
+package com.sevenmoor.behaviours;
 
-import agents.ProducerConsumerAgent;
+import com.sevenmoor.agents.ProducerConsumerAgent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
@@ -42,6 +42,7 @@ public class SellerBehaviour extends CyclicBehaviour {
 
         // Does the filter contains a message ?
         if (msg != null) {
+            System.out.println("["+myAgent.getName()+"] Received proposal call");
             // Yes:
             // Process the message and create a reply
             String title = msg.getContent();
@@ -52,6 +53,8 @@ public class SellerBehaviour extends CyclicBehaviour {
             String salePrice = String.valueOf(agent.getSalePrice());
             reply.addUserDefinedParameter("quantity", quantity);
             reply.addUserDefinedParameter("price", salePrice);
+
+            System.out.println("["+myAgent.getName()+"] Proposing price="+salePrice+" and quantity="+quantity);
             // Send the reply
             agent.send(reply);
 
@@ -78,14 +81,16 @@ public class SellerBehaviour extends CyclicBehaviour {
             // Yes:
             // Process the message
             int performative = msg.getPerformative();
-            int quantity = Integer.parseInt(msg.getUserDefinedParameter("quantity"));
-
             // Has the agent accepted the proposal ?
             if (performative == ACLMessage.ACCEPT_PROPOSAL) {
                 // Yes:
                 // Send a confirmation
+                String quantityString = msg.getUserDefinedParameter("quantity");
+                int quantity = Integer.parseInt(quantityString);
+
                 ACLMessage reply = msg.createReply();
                 reply.setPerformative(ACLMessage.CONFIRM);
+                System.out.println("["+myAgent.getName()+"] Confirming sale for quantity="+quantity);
                 agent.send(reply);
 
                 // Complete the sale

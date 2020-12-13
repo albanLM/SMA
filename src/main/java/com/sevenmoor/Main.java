@@ -1,3 +1,5 @@
+package com.sevenmoor;
+
 public class Main {
     public static void main(String[] args) {
         int agentCount = 3;

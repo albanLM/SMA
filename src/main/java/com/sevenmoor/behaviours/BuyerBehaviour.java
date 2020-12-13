@@ -1,6 +1,6 @@
-package behaviours;
+package com.sevenmoor.behaviours;
 
-import agents.ProducerConsumerAgent;
+import com.sevenmoor.agents.ProducerConsumerAgent;
 import jade.core.AID;
 import jade.core.behaviours.Behaviour;
 import jade.domain.DFService;
@@ -11,7 +11,6 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static jade.lang.acl.MessageTemplate.MatchPerformative;
 
@@ -32,7 +31,8 @@ public class BuyerBehaviour extends Behaviour {
     }
 
     @Override
-    public void action() {
+    public void action(){
+        System.out.println("["+myAgent.getName()+"] Starting buyer behaviour");
         switch (state) {
             case 0:
                 callForProposal();
@@ -76,6 +76,7 @@ public class BuyerBehaviour extends Behaviour {
             cfp.addReceiver(sellerAgent);
         }
         myAgent.send(cfp);
+        System.out.println("["+myAgent.getName()+"] Sent call for proposal");
 
         // Update the attributes values
         state = 1;
@@ -94,6 +95,7 @@ public class BuyerBehaviour extends Behaviour {
             // Reply received
             int sellerQuantity = Integer.parseInt(reply.getUserDefinedParameter("quantity"));
             float price = Float.parseFloat(reply.getUserDefinedParameter("price"));
+            System.out.println("["+myAgent.getName()+"] Received proposal for quantity="+sellerQuantity+" and price="+price);
             // Is this offer the best so far ?
             if (bestSeller == null || price < bestPrice) {
                 // Yes:
@@ -128,7 +130,8 @@ public class BuyerBehaviour extends Behaviour {
                 }
 
                 // Send a REJECT_PROPOSAL to all sellers that should receive it
-                ACLMessage reject = new ACLMessage(ACLMessage.REJECT_PROPOSAL);;
+                ACLMessage reject = new ACLMessage(ACLMessage.REJECT_PROPOSAL);
+                System.out.println("["+myAgent.getName()+"] Rejecting bad offers");
                 for (AID seller : sellerAgents) {
                     reject.addReceiver(seller);
                 }
@@ -150,6 +153,7 @@ public class BuyerBehaviour extends Behaviour {
         ACLMessage reply = myAgent.receive(mt);
         if (reply != null) {
             // Apply the transaction
+            System.out.println("["+myAgent.getName()+"] Confirming purchase on client side");
             agent.buy(boughtQuantity, bestPrice); // TODO: Verify purchase success
 
             // Go to state 3 and quit the purchase

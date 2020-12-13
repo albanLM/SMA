@@ -1,7 +1,6 @@
-package behaviours;
+package com.sevenmoor.behaviours;
 
-import agents.ProducerConsumerAgent;
-import jade.core.Agent;
+import com.sevenmoor.agents.ProducerConsumerAgent;
 import jade.core.behaviours.TickerBehaviour;
 
 public class ProducerBehaviour extends TickerBehaviour {
@@ -14,6 +13,7 @@ public class ProducerBehaviour extends TickerBehaviour {
 
     @Override
     protected void onTick() {
+        System.out.println("["+myAgent.getName()+"] Produced 1 "+agent.getProduct());
         agent.produce();
     }
 }

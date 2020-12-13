@@ -1,8 +1,8 @@
-package agents;
+package com.sevenmoor.agents;
 
-import behaviours.ConsumerBehaviour;
-import behaviours.ProducerBehaviour;
-import behaviours.SellerBehaviour;
+import com.sevenmoor.behaviours.ConsumerBehaviour;
+import com.sevenmoor.behaviours.ProducerBehaviour;
+import com.sevenmoor.behaviours.SellerBehaviour;
 import jade.core.Agent;
 import jade.core.behaviours.ParallelBehaviour;
 import jade.domain.DFService;
@@ -52,15 +52,15 @@ public class ProducerConsumerAgent extends Agent {
         Object[] args = getArguments();
         if (args != null && args.length != 0) {
             try {
-                id = Integer.parseInt((String) args[0]);
-                productionRate = Float.parseFloat((String)args[1]);
-                consumptionRate = Float.parseFloat((String)args[2]);
-                decayRate = Float.parseFloat((String)args[3]);
+                id = (args[0].getClass().getSimpleName().equals("Integer")) ? (int) args[0] : Integer.parseInt((String) args[0]);
+                productionRate = (args[1].getClass().getSimpleName().equals("Float")) ? (float) args[1] : Float.parseFloat((String)args[1]);
+                consumptionRate = (args[2].getClass().getSimpleName().equals("Float")) ? (float) args[2] : Float.parseFloat((String)args[2]);
+                decayRate = (args[3].getClass().getSimpleName().equals("Float")) ? (float) args[3] : Float.parseFloat((String)args[3]);
                 product = (String) args[4];
                 supply = (String) args[5];
-                productMaxQuantity = Long.parseLong((String) args[6]);
-                money = Float.parseFloat((String)args[7]);
-                supplyQuantity = Integer.parseInt((String) args[8]);
+                productMaxQuantity = (args[6].getClass().getSimpleName().equals("Long")) ? (long) args[6] : Long.parseLong((String) args[6]);
+                money = (args[7].getClass().getSimpleName().equals("Float")) ? (float) args[7] : Float.parseFloat((String)args[7]);
+                supplyQuantity = (args[8].getClass().getSimpleName().equals("Integer")) ? (int) args[8] : Integer.parseInt((String) args[8]);
                 satisfaction = 1.0f;
                 salePrice = 1.0f;
                 productQuantity = 0;
@@ -243,11 +243,11 @@ public class ProducerConsumerAgent extends Agent {
         return salePrice;
     }
 
-    public float getSupplyQuantity() {
+    public int getSupplyQuantity() {
         return supplyQuantity;
     }
 
-    public float getProductQuantity() {
+    public int getProductQuantity() {
         return productQuantity;
     }
 

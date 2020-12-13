@@ -1,3 +1,5 @@
+package com.sevenmoor;
+
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.WakerBehaviour;
@@ -5,6 +7,7 @@ import jade.wrapper.AgentContainer;
 import jade.wrapper.StaleProxyException;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Simulation in which the agents will interact with each other.
@@ -25,9 +28,9 @@ public class Simulation extends Agent {
         // Get arguments
         // Get the agent arguments
         Object[] args = getArguments();
-        if (args != null && args.length != 0) {
+        if (args != null && args.length>3){
             try {
-               settings = (SimulationSettings) args[0];
+               settings = new SimulationSettings(args);
                products = settings.productNames;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -50,11 +53,18 @@ public class Simulation extends Agent {
         AgentContainer agentContainer = getContainerController();
 
         for (int i = 0; i < settings.agentCount; i++) {
-            // Agent arguments : id, productionRate, consumptionRate, decayRate, product, supply, productMaxQuantity, money, supplyQuantity
-            // TODO: Automate the arguments creation
-            Object[] args = {i, 2.0f, 0.5f, 0.1f, "banana", "banana", 50, 5.0f, 10};
+            Random rand = new Random();
+            float productionRate = Math.abs(rand.nextFloat()) * (3.0f - 0.5f) + 0.5f;
+            float consumptionRate = Math.abs(rand.nextFloat()) * (2f - 0.1f) + 0.1f;
+            float decayRate = Math.abs(rand.nextFloat()) * (0.5f - 0.1f) + 0.1f;
+            long productMaxQuantity = 10 + Math.abs(rand.nextLong()) % (100 - 10 + 1);
+            int supplyQuantity = 10 + Math.abs(rand.nextInt()) % (30 - 10 + 1);
+            String produces = settings.productNames[rand.nextInt(settings.productNames.length)];
+            String consumes = settings.productNames[rand.nextInt(settings.productNames.length)];
+
+            Object[] args = {i, productionRate, consumptionRate, decayRate, produces, consumes, productMaxQuantity, settings.startMoney, supplyQuantity};
             try {
-                agentContainer.createNewAgent("PCA_" + i, "main.java.agents.ProducerConsumerAgent", args).start();
+                agentContainer.createNewAgent("PCA_" + i, "com.sevenmoor.agents.ProducerConsumerAgent", args).start();
             } catch (StaleProxyException e) {
                 e.printStackTrace();
             }
