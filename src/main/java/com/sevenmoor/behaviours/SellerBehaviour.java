@@ -4,16 +4,21 @@ import com.sevenmoor.agents.ProducerConsumerAgent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import javafx.animation.KeyFrame;
-
-import java.util.Date;
 
 import static jade.lang.acl.MessageTemplate.MatchPerformative;
 
+/**
+ * Behaviour that allows the agent to make transactions with potential buyers.
+ */
 public class SellerBehaviour extends CyclicBehaviour {
+    /** Agent this behaviour is attached to. */
     private final ProducerConsumerAgent agent;
+
+    /** Current state of the transaction. From 0 to 1, with :
+     * 0 -> Idle, listening for calls of proposal
+     * 1 -> A proposal has been sent and the agent listens for answer
+     */
     private int state;
-    private Date start;
 
     public SellerBehaviour(ProducerConsumerAgent agent) {
         super(agent);
@@ -21,9 +26,13 @@ public class SellerBehaviour extends CyclicBehaviour {
         state = 0;
     }
 
+    /**
+     * Make the agent listen for proposals and sell his goods.
+     * The sales are managed with states. Each state corresponds to a different step of the transaction.
+     * When a transaction is complete, the agent comes back to state 0 and idles until a new call for proposal is received.
+     */
     @Override
     public void action() {
-        start = new Date();
         switch (state) {
             case 0:
                 listenForProposal();

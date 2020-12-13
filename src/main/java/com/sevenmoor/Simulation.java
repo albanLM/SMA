@@ -48,14 +48,13 @@ public class Simulation extends Agent {
     private SimulationSettings settings;
 
     /**
-     * Override of the setup method in Agent. It ensures setting reception, the registering of the of a behaviour to schedule the end of the simulation,
+     * Override of the setup method in Agent. It ensures setting reception, the registering of a behaviour to schedule the end of the simulation,
      * as well as another behaviour to receive statistics.
      */
     @Override
     protected void setup() {
         super.setup();
 
-        // Get arguments
         // Get the agent arguments
         Object[] args = getArguments();
         if (args != null && args.length>3){
