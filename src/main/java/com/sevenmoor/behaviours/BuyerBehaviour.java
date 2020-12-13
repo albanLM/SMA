@@ -64,7 +64,7 @@ public class BuyerBehaviour extends Behaviour {
         try {
             DFAgentDescription[] result = DFService.search(agent, template);
             System.out.println("Found the following seller agents:");
-            for (int i = 0; i < result.length; ++i) {
+            for(int i = 0; i < result.length; ++i){
                 sellerAgents.add(result[i].getName());
                 System.out.println(result[i].getName());
             }

@@ -19,11 +19,11 @@ import static jade.lang.acl.MessageTemplate.MatchPerformative;
 
 /**
 * Producer and consumer agent.
-* The agents take part in the simulation.
+* The agents takes part in the simulation.
 * They can buy the goods they need and sell the ones they produces to keep their satisfaction high.
 */
 public class ProducerConsumerAgent extends Agent {
-    /**Identifier of the agent.*/
+    /** Identifier of the agent.*/
     private int id;
 
     /** Speed at which the agent produces goods in units/sec. */
